@@ -142,3 +142,42 @@ So let's supply this threshold with a number then. Create a new 'Vector 1' node.
 Right now we need to manually change the value for how much we want to dissolve our monkey. We could expose this value to the inspector by converting the Vector1 node to a property, or we can automate it over time. Once again we'll choose to animate it over time. Start off by deleting the Vector1 node. We'll put a Time node in its place. Hook the Sine Time of the Time node up to a Remap node at default values, then pipe this Remap into the AlphaClipThreshold on the Master node like so:
 
 ![Animating the dissolving over time](/Images/AutomatedDissolve.PNG)
+
+We have now automated the dissolve effect to loop over time. To improve the looks of our effect we want to have a glowing edge around the parts that are dissolving. So let's get started on that.
+
+### The Step node
+
+We'll start off by adding a new node called a 'Step' node. We hook the output of the Simple Noise node up to the Edge input of the Step node. Leave it so that the output of Simple Noise is going to **both** the Step node and the Alpha of the Master node. The step node essentially functions the same as the AlphaClipThreshold of the Master node. If you play around with the In value of the Step node you'll see the same kind of dissolving pattern appear as what you would see on the preview. If we now hook up the output of the Remap node to the In of the Step node we'll see the exact same pattern as what would be appearing in the Master node. We can now hook up this pattern from the step function to the Emission of the master node to make it glow in the same pattern as what is being dissolved.
+
+![Progress on the step node](/Images/DissolveStepNode.PNG)
+
+### Offsetting the Step node
+
+Our changes don't show any glowing effect though. And that is because the parts that are glowing also happen to be transparent. We need to slightly offset the glowing effect to bleed out of the dissolved edges. We can delete our connection between the Remap and Step nodes and create a new Add node in between. Take the result of the Remap node and input it into the Add node, then take the output from this Add node and hook it up to the Step node. Then set the other value of the Add node to something small like `0.01`. Now you'll see a glowing white edge around your dissolve effect.
+
+(Tip: You can collapse a node to make it smaller by hovering over it and clicking on the `^` arrow in the output preview)
+
+We can also expose the value that goes into our Add node to make it able to edit the glow thickness from within the inspector. Let's add a Vector1 property on our blackboard, drag it into our graph and hook it up to our Add node. The result of these changes should look like this:
+
+![Offsetting the glowing effect](/Images/DissolveOffset.PNG)
+
+### Adding a color to the glow
+
+It would look better if we could make our edges glow. So let's add some color. First we'll delete the connection between our Step and Master nodes. Instead we'll create a new Color node and combine the results of this node with the output of the Step node in a new Multiply node. This Multiply node will then form the new connection to the Master node emission. We can change the Mode on the Color node to HDR to allow for really bright values and let's set the value to a light blue of `0, 82, 255` with an intensity of `4`.
+
+![Changing the color of our dissolve](/Images/ColoredDissolve.PNG)
+
+### Finishing up
+
+We're pretty much done with our dissolve shader. There's just a few more things to adjust.
+
+It would be nicer if we can see the back of the object while it is dissolving. We can do this by clicking the cog of the Master node and checking the Two Sided checkbox.
+
+We can also expose some values to the inspector to make editing the effect easier. Let's start by right clicking on the Color node and converting it to a property. We can rename it to `Edge Color`.
+
+Let's also create a new Vector1 property on the blackboard called Noise Scale, set the default value to `30`, drag it into the graph and hook it up to the Scale of the Simple Noise node.
+
+Finally we'll save the shader by clicking 'Save Asset' at the top left of the shader graph window. Then we'll go to our `Monkey Center` material in the `Materials/` folder and change the shader to our new Dissolve Shader. Now you can play around with some of the values and watch them in the scene and game views. (The effect won't update unless holding left or right click in the scene view, or by entering play mode)
+
+## Creating the hologram shader
+
