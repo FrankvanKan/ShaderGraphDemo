@@ -233,7 +233,7 @@ The preview is a bit dull, but if we look at it in the editor it is a bit too br
 
 We can enhance the glow a bit by taking the Sasmple Texture 2D output and also sending it to a One Minus node. This node inverts the input and sends it back out. We can combine the result of this One Minus with the Base Color property in a Multiply node. Then we combine this Multiply node with the colored Fresnel in a new Add node. Finally we output this Add node into the Emission of the Master node. This should make the lines on our hologram also glow to stand out a bit more.
 
-![Enchancing the glow](/Images/EnchancedHologramGlow.PNG)
+![Enhancing the glow](/Images/EnhancedHologramGlow.PNG)
 
 ### Flickering glow
 
