@@ -173,11 +173,74 @@ We're pretty much done with our dissolve shader. There's just a few more things 
 
 It would be nicer if we can see the back of the object while it is dissolving. We can do this by clicking the cog of the Master node and checking the Two Sided checkbox.
 
-We can also expose some values to the inspector to make editing the effect easier. Let's start by right clicking on the Color node and converting it to a property. We can rename it to `Edge Color`.
+We can also expose some values to the inspector to make editing the effect easier. Let's start by right clicking on the Color node and converting it to a property. We can rename it to 'Edge Color'.
 
-Let's also create a new Vector1 property on the blackboard called Noise Scale, set the default value to `30`, drag it into the graph and hook it up to the Scale of the Simple Noise node.
+Let's also create a new Vector1 property on the blackboard called 'Noise Scale', set the default value to `30`, drag it into the graph and hook it up to the Scale of the Simple Noise node.
 
 Finally we'll save the shader by clicking 'Save Asset' at the top left of the shader graph window. Then we'll go to our `Monkey Center` material in the `Materials/` folder and change the shader to our new Dissolve Shader. Now you can play around with some of the values and watch them in the scene and game views. (The effect won't update unless holding left or right click in the scene view, or by entering play mode)
 
 ## Creating the hologram shader
 
+Once again we start off by creating a new PBR Graph under the `Shaders/` folder and naming it `HologramShader`. We will expose our albedo to the inspector by adding a new Color property on the blackboard called 'Base Color' and connecting that property up to the Albedo of the Master node. Let's also go ahead and set the default of the Base Color to `110, 205, 125`. Fianlly we'll change the preview to the monkey again.
+
+### Texture Transparency
+
+Holograms usually appear in these kinds of lines like some old CRT TV. We'll use a texture with these lines on it to make parts of our material transparent. We start off by adding a new property on the blackboard of type Texture2D. Rename the new property to `Hologram Texture` and set the default texture to `HologramLines_Simple` or `HologramLines_Cool`.
+
+Once again we need to pipe our texture through a Sample Texture 2D node before adding it to the Alpha of our Master node. We also need to click the cog on our Master node and set the Surface to Transparent.
+
+![Setting our hologram shader to make parts of the material transparent](/Images/HologramTextureTransparency.PNG)
+
+### Drawing lines horizontally across the mesh
+
+We have now ended up with mapping the texture onto the UV of the monkey. This creates a bunch of lines going in all different directions and is how you would usually apply textures. But in this case we want the lines to kind of scroll across from top to bottom.
+
+To do this we start off by creating a new 'Tiling And Offset' node. We connect the output of this node to the UV of our Sample Texture 2D node. Then we create a new 'Screen Position' node and connect the output to the UV input of the Tiling And Offset node. The preview should now lines going horizontally across the monkey instead of wrapping around the monkey.
+
+![Adjusting the UV of the hologram](/Images/AdjustingHologramTexture.PNG)
+
+It would be nice if we could adjust the tiling of our texture in the inspector. To do this we'll create a new property on the blackboard of type Vector2, name it 'Hologram Texture Tiling', set the default to `1, 3` and connect it up to the Tiling of our Tiling And Offset node. We'll also collapse the Screen Position node to tidy up our graph.
+
+![Tidied up our texture tiling](/Images/TidiedHologramTexture.PNG)
+
+### Scrolling the texture
+
+Just as we can adjust the tiling of our texture through the Tiling And Offset, so can we adjust the offset of the texture. We can do this immediately by adding a Time node and connecting the Time output to the Offset of the Tiling And Offset node. Now you should be able to see the texture scrolling across the monkey in the preview.
+
+It would be nice to be able to control the scroll speed though. To do this we will put a Multiply node between Time and Tiling And Offset. We add a new Vector1 property to the blackboard called 'Scroll Speed' with a default value of `0.1`. We'll also hook this Scroll Speed up to the Multiply node.
+
+![Adjusting the offset over time to make the texture scroll](/Images/ScrollingHologramTexture.PNG)
+
+### Applying the shader
+
+Our shader should now look like this: 
+
+![Full scrolling hologram](/Images/ScrollingHologramFull.PNG)
+
+We can go back into the editor and set the shader on our `Right Monkey` material to the HologramShader. Now you can play around with the color, texture and scrolling speed in the inspector.
+
+We'll continue to enchance the effect of the shader.
+
+### Hologram glow
+
+Let's enchace our hologram by adding a bit of a glow. First we'll create a new Color node with an HDR mode and an RGB of `255, 92, 0` and an intensity of `5`. We'll also add a Fresnel Effect node with a power of `3` and combine it with our color through a Multiply node. Then we'll take the output of that Multiply node and connect it to the Emission of our Master node.
+
+![Creating a glow around the hologram](/Images/HologramGlow.PNG)
+
+The preview is a bit dull, but if we look at it in the editor it is a bit too bright. So let's start off by converting the Color node to a property and naming it 'Glow Color'. We'll then also lower the brightness a bit by lowering the intensity of our new property back down to `2`.
+
+### Enhancing the glow
+
+We can enhance the glow a bit by taking the Sasmple Texture 2D output and also sending it to a One Minus node. This node inverts the input and sends it back out. We can combine the result of this One Minus with the Base Color property in a Multiply node. Then we combine this Multiply node with the colored Fresnel in a new Add node. Finally we output this Add node into the Emission of the Master node. This should make the lines on our hologram also glow to stand out a bit more.
+
+![Enhancing the glow](/Images/EnhancedHologramGlow.PNG)
+
+### Flickering glow
+
+Lastly we can make our glow flicker. We start off with a Time node with the Time output going into a Random Range node with a min, max of `0, 1`. This Random Range node outputs into a Comparison node that compares Random Range to `0.9` using a `Greater` comparison. This Comparison then connects to the Predicate of a Branch node that output `1` for True and `0.8` for False. The branch outputs into a Multiply node that combines the effects of the flicker and the previous emission output.
+
+![Making the hologram flicker](/Images/FlickeringHologram.PNG)
+
+## End note
+
+And with that we have finalized our three shaders. Shader graph is a powerful tool to quickly create complex shaders using simple operations. Due to it's visual nature it can also be understood and used by artists. Absolutely feel free to experiment with some of the nodes to create your own shaders and effects.
