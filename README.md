@@ -1,17 +1,17 @@
 # Shader Graph Demo
 
-Shader Graphs are a way to create your own shaders using a visual node based editor. No code required :)
+Shader Graphs are a new method of creating your own shaders using a visual node based editor. No code required :)
 
-This readme will go through the steps to create your own shaders. Over the course of the demo we will be creating three unique shaders.
+This readme will teach you the basics of shader graphs by creating three shaders of your own.
 1. A glowing effect
 2. A dissolving effect
 3. A hologram effect
 
-The included project contains a basic scene, some models and some materials to start working on.
+This GitHub repository contains a basic unity project with some models and materials that we can start working on.
 
 ![Scene and Project Layout](/Images/SceneProjectLayout.PNG)
 
-Of note are the three monkeys in the scene `Scenes/Shaders.unity`. Each has his own material in the `Materials/` folder. The `Textures/` folder contains some textures that we will be working with during the demo. `Models/` contains the monkey model. The rest of the folders are some standard assets needed for a URP project and can be ignored.
+Of note are the three monkeys in the scene `Scenes/Shaders.unity`. Each monkey has its own material in the `Materials/` folder. The `Textures/` folder contains some textures that we will be working with during the demo. `Models/` contains the monkey model. And the rest of the folders are some standard assets needed for a URP project, those can be ignored.
 
 ## Creating our first shader
 
@@ -19,11 +19,11 @@ We will start by creating a new folder under `Assets/` called `Shaders`. In this
 
 ![Creating a new shader](/Images/CreateNewShader.gif)
 
-Rename the shader to something along the lines of `GlowShader` and open it by double clicking on it.
+Rename the shader to `GlowShader` and open it by double clicking on it.
 
 ## The shader graph window
 
-We have now opened the shader graph window. In the bottom right we have a little preview of our final shader. In the top left we have our Blackboard, this is where our Properties and Keywords go that will make our shader customizable from within the editor and code (we'll get to this later). And in the middle we have a PBR Master node. This node is the final result of our shader.
+We have now opened the shader graph window. In the bottom right we have a preview of our final shader and in the top left we have our Blackboard, this is where our Properties and Keywords go that will make our shader customizable from within the editor and code (we'll get to this later). Inn the middle we have our PBR Master node. This node takes all the inputs that will shape the final result of our shader.
 
 ![The Shader Graph Window](/Images/ShaderGraphWindow.PNG)
 
@@ -33,17 +33,19 @@ You can scroll in and out by using the scroll wheel. You can drag the view by ho
 
 ## Creating the glowing shader
 
+We will start off by making a shader that will add a glowing edge around objects. Aditionally we'll make this edge pulse over time.
+
 ### Setting a base color
 
-We can now edit properties of the master node as you would normally edit properties of a material in the editor. For instance we can set the albedo to a nice blue color. Once you have done this, you will see that the preview will also update to reflect the new color.
+Starting off, we can now edit properties of the master node as you would normally edit properties of a material in the editor. For instance we can set the albedo to a nice blue color. Once you have done this, you will see that the preview will also update to reflect the new color.
 
 ![Changing the albedo settings](/Images/ChangingAlbedo.gif)
 
 ### Adding a glow
 
-Now to make the object glow we need to make use of the emission property. However by just setting the emission to an RGB value of `255, 255, 255` will turn the entire preview  object white. This is not what we are trying to achieve.
+Now to make the object glow we need to make use of the emission property. However, just setting the emission to an RGB value of `255, 255, 255` will turn the entire preview  object white. This is not the effect we are trying to achieve.
 
-Instead we will leave the emission RGB at `0, 0, 0` and create a new node. You can create a new node by right clicking on an empty space in the shader graph window and selecting `Create Node` or by pressing space when the shader graph window is focused. The effect we are looking for is called a 'Fresnel Effect', so we create a new Fresnel Effect node. We can use the Power property of the Fresnel Effect node to tone down the effect. Let's set the Power to 3 for now.
+Instead we will create a new node. You can create a new node by right clicking on an empty space in the shader graph window and selecting `Create Node`, or by pressing space when the shader graph window is focused. The effect we are looking for is called a 'Fresnel Effect', so we create a new Fresnel Effect node. We can use the Power property of the Fresnel Effect node to tone down the effect. Let's set the Power to `3` for now.
 
 ![Creating a new Fresnel Effect node](/Images/CreatingFresnelNode.gif)
 
@@ -53,17 +55,17 @@ After creating our Fresnel node we connect its output to the emision of the Mast
 
 ### Setting a glow color
 
-Now let's add a color to our glowing effect. We start by adding a 'Color' node. We set a color to something random (I'm using `255, 133, 0`). Then we add another node called the 'Multiply' node. This node can be seen as taking two inputs and combining their results. If we click on the connection between the Fresnel and Master nodes and press `Delete` we can delete this connection. Now we can connect the outputs of the Color and Fresnel node to the input of the Multiply node. We then connect the output of Multiply to the emission of our Master node. The result should look something like this:
+Now let's add a color to our glowing effect. We start off by adding a new 'Color' node. We can set a color to something random (I'm using `255, 133, 0`). Then we add another node called the 'Multiply' node. This node can be seen as taking two inputs and combining their results. If we click on the connection between the Fresnel and Master nodes and press `Delete` we can delete this connection. Now we can connect the outputs of the Color and Fresnel node to the inputs of the Multiply node. We then connect the output of Multiply to the emission of our Master node. The result should look something like this:
 
 ![Colored fresnel effect](/Images/ColoredFresnel.PNG)
 
-To slightly bump up the glow we can change the mode on the Color node to HDR and set the intensity to +1.
+To slightly bump up the glow we change the mode on the Color node to HDR and set the intensity to +1.
 
 ![Setting the glow to an HDR effect](/Images/HDRFresnelColor.gif)
 
 ### Viewing the shader in the scene
 
-Now that we have a good glowing effect we can apply it to one of the monkeys in the scene. First we save our shader by clicking on 'Save Asset' in the top left of our shader graph window.
+Now that we have a nice glowing effect we can apply it to one of the monkeys in the scene. But first, we need to save our shader by clicking on 'Save Asset' in the top left of our shader graph window.
 
 Then we natigate to the `Materials/` folder in our project window. We select the `Monkey Left` material and at the top of the inspector we expand the Shader dropdown and select `ShaderGraphs > GlowShader`
 
@@ -75,19 +77,19 @@ This change should now also be reflected in our scene and game views.
 
 ### Exposing the glow color in the editor
 
-Currently, if we want to change the color of the glow effect we would need to open up the shader, make a change to the color node and save our changes. It would be much nicer if we could make these changes from within the inspector.
+Currently, if we want to change the color of the glow effect we would need to open up the shader, make a change to the color node and save our changes. It would be much better if we could make these changes from within the inspector.
 
-We can do this by right clicking on our Color node and selecting 'Convert To Property'. This will change our node to refer to the property and the contents of the node will be copied to a property that now shows up on the blackboard.
+We can do this by going back into our shader, right clicking on our Color node and selecting 'Convert To Property'. This will move the values of the node into a property on the blackboard. It will then change the node to represent a copy of the property instead. These properties can now be used in multiple places in the graph and the values can be edited from within the inspector.
 
 ![Converting the glow color to a property](/Images/ConvertingGlowColorToProperty.gif)
 
-The 'Color' property will now show up in our blackboard. From here we can check if it is Exposed (checking this will make it show up in the inspector) and set some of the default values. We can also right click the property on the blackboard and rename it. We'll rename it to 'Glow Color'
+The 'Color' property will now show up in our blackboard. From here we can set the checkox to Expose the property (checking this will make it show up in the inspector) and set some of the default values. We can also right click the property on the blackboard and rename it. We'll rename it to 'Glow Color'.
 
 ![The converted glow color node as shown on the blackboard](/Images/ConvertedGlowColor.PNG)
 
 ### Changing the preview
 
-Instead of switching to the scene view to view our changes on the monkey head, we could also change our preview to show what it would look like on the monkey head. We can change the look of the preview by right clicking on it and selecting 'Custom Mesh' and then selecting our monkey mesh. This will adjust the preview to apply our shader to the monkey instead of the default sphere. Once adjusted we can rotate the monkey by holding left click on the preview and dragging the mouse to rotate the preview.
+Instead of switching to the scene view to view our changes on the monkey head, we could also change our preview to reflect what our shader would look like on the monkey. We can change object in the preview by right clicking on it, selecting 'Custom Mesh' and then selecting our monkey mesh. This will adjust the preview to apply our shader to the monkey instead of the default sphere. Once adjusted we can rotate the monkey by holding left click on the preview and dragging the mouse to rotate the preview.
 
 ![Adjusting the shader preview](/Images/AdjustingPreview.gif)
 
@@ -97,21 +99,21 @@ Let's now animate the glow effect over time. Start by freeing up some space by s
 
 ![Making some space within our shader graph window](/Images/MakingSpace.gif)
 
-We'll create a new node called a 'Time' node. We'll also create a new Multiply node. Now we can delete the output of the old multiply node to the emission. Instead we will connect this up to the new multiply node. We'll also take the Sine Time of our Time node and hook it up to the new Multiply node. Lastly we connect our new multiply node to the emission of our Master node. It should look something like this:
+We'll create a new node called a 'Time' node. We'll also create a new Multiply node. Now we can delete the output of the old multiply node to the emission. Instead we will connect this up to the new multiply node. We'll then take the Sine Time of our Time node and hook it up to the new Multiply node. Lastly we connect our new multiply node to the emission of our Master node. It should look something like this:
 
 ![Creating a glow effect over time](/Images/GlowOverTime.PNG)
 
-This adjustment has one small issue. Our glow will now turn off and on for a few seconds. This is because the value supplied by Sine Time will hover between -1 and 1. If we only want the glow to fade a bit, but not fully disappear we'll need to change the values supplied by Sine Time. We will delete the old connection from Sine Time to Multiply and add a new node in between these two. This node is called Remap. We supply the Sine Time output to the input of our Remap. We leave the 'In Min Max' at `-1, 1`, but we set our 'Out Min Max' to `0.2, 1`. This takes the values between -1 and 1 by Sine Time and maps them to a new range between 0.2 and 1. This new Remap node sits between our Time and Multiply like so:
+This adjustment has one small issue. Our glow will now turn negative for a few seconds. This is because the value supplied by Sine Time will hover between -1 and 1. If we only want the glow to fade out partially, we'll need to do something about the values supplied by Sine Time. We will delete the old connection from Sine Time to Multiply and add a new node in between these two. This node is called Remap. We supply the Sine Time output to the input of our Remap. We leave the 'In Min Max' at `-1, 1`, but we set our 'Out Min Max' to `0.2, 1`. This takes the values between -1 and 1 by Sine Time and maps them to a new range between 0.2 and 1. This new Remap node sits between our Time and Multiply like so:
 
 ![Fixing the glow over time effect](/Images/GlowOverTimeFixed.PNG)
 
 ### Working with textures
 
-The last point of our glow shader is to work with textues. We will start by adding a new property in our blackboard with a type of 'Texture2D' and naming it 'Occlusion'. We then assign the `Monkey_Occlusion` texture to the Default value.
+The last thing we'll add to our shader is a nice ambient occlusion effect to make the glow pop out a bit more. We will start by adding a new property in our blackboard with a type of 'Texture2D' and naming it 'Occlusion'. We then assign the `Monkey_Occlusion` texture to the Default value.
 
 ![Adding a new property for the occlusion texture](/Images/AddingOcclusionTextureProperty.gif)
 
-We can drag our new Occlusion property from the blackboard into the graph. However we cannot directly connect our Occlusion property to the Occlusion on the master node. The value from our blackboard property needs to be converted first. We do this by creating a new node 'Sample Texture 2D'. This node sits between our blackboard property and the Master node like so:
+We can drag our new Occlusion property from the blackboard into the graph. However, we cannot directly connect our Occlusion property to the Occlusion on the master node. The value from our blackboard property needs to be converted first. We do this by creating a new node 'Sample Texture 2D'. This node sits between our blackboard property and the Master node like so:
 
 ![Connecting the Occlusion texture to the Master node](/Images/GlowMonkeyOcclusion.PNG)
 
@@ -123,15 +125,15 @@ We'll start by adding another PBR graph shader under our `Shaders/` folder and n
 
 ### Generating noise and setting transparency
 
-To start off we need some noise to make random parts of our model transparent. We can use the Simple Noise node to generate some random noise. Add this Simple Noise node and set the Scale to 30. You'll see the cloudy texture that gets generated on the bottom of the node. We can then connect the output of our Noise node to the Alpha of our Master node. This change won't show in the preview however. To show the change in the preview we need to allow our shader to be transparent. We can do this by selecting the Master node and clicking on the cog, then clicking on the Surface dropdown and switching to Transparent.
+To start off we need some noise to make random parts of our model transparent. We can use the Simple Noise node to generate some random noise. Add this Simple Noise node and set the Scale to 30. You'll see the cloudy texture that gets generated on the bottom of the node. We can then connect the output of our Noise node to the Alpha of our Master node. This change won't show in the preview however. To see the changes we need to allow our shader to be transparent. We can do this by selecting the Master node and clicking on the cog, then clicking on the Surface dropdown and switching it to Transparent.
 
 ![Making the master node transparent](/Images/MasterNodeTransparency.gif)
 
-Looking at the preview you can see that the monkey is now a bit transparent. This is not the effect we're looking for though. So we'll revert our change by setting the Surface back to Opaque. Instead we want a clear cutoff point. This is where AlphaClipThreshold comes in.
+Looking at the preview you can see that the monkey is now a tiny bit transparent with a cloudy pattern. This is not the effect we're looking for. So we'll revert our change by setting the Surface back to Opaque. Instead we want a clear cutoff point. This is where AlphaClipThreshold comes in.
 
 ### All or nothing transparency
 
-The AlphaClipThreshold is a simple number between 0 and 1. It will take the alpha value of every point on the texture and see if it is below the threshold. If the alpha value is below the threshold then that point will be completely transparent.
+The AlphaClipThreshold is looking for a simple number. It will take the alpha value of every point on the texture and compare them to the threshold. If the alpha value is below the threshold then that point will be completely transparent.
 
 So let's supply this threshold with a number then. Create a new 'Vector 1' node. This node is basically just a float. Connect this node to the AlphaClipThreshold on the Master node. If we now adjust the value of this Vector1 node you can see the preview start to dissolve.
 
@@ -143,17 +145,17 @@ Right now we need to manually change the value for how much we want to dissolve 
 
 ![Animating the dissolving over time](/Images/AutomatedDissolve.PNG)
 
-We have now automated the dissolve effect to loop over time. To improve the looks of our effect we want to have a glowing edge around the parts that are dissolving. So let's get started on that.
+We have now automated the dissolve effect to loop over time. To improve the looks of our effect we want to create a glowing edge around the parts that are dissolving. So let's get started on that.
 
 ### The Step node
 
-We'll start off by adding a new node called a 'Step' node. We hook the output of the Simple Noise node up to the Edge input of the Step node. Leave it so that the output of Simple Noise is going to **both** the Step node and the Alpha of the Master node. The step node essentially functions the same as the AlphaClipThreshold of the Master node. If you play around with the In value of the Step node you'll see the same kind of dissolving pattern appear as what you would see on the preview. If we now hook up the output of the Remap node to the In of the Step node we'll see the exact same pattern as what would be appearing in the Master node. We can now hook up this pattern from the step function to the Emission of the master node to make it glow in the same pattern as what is being dissolved.
+We'll start off by adding a new node called a 'Step' node. We hook the output of the Simple Noise node up to the Edge input of the Step node. Leave it so that the output of Simple Noise is going to **both** the Step node and the Alpha of the Master node. The step node essentially functions the same as the AlphaClipThreshold of the Master node. If you play around with the In value of the Step node you'll see the same kind of dissolving pattern appear as what you would see on the preview. If we now hook up the output of the Remap node to the In of the Step node it'll produce the exact same pattern as what would be applied to the Master node. We can now hook up this pattern from the step function to the Emission of the master node to make it glow in the same pattern as what is being dissolved.
 
 ![Progress on the step node](/Images/DissolveStepNode.PNG)
 
 ### Offsetting the Step node
 
-Our changes don't show any glowing effect though. And that is because the parts that are glowing also happen to be transparent. We need to slightly offset the glowing effect to bleed out of the dissolved edges. We can delete our connection between the Remap and Step nodes and create a new Add node in between. Take the result of the Remap node and input it into the Add node, then take the output from this Add node and hook it up to the Step node. Then set the other value of the Add node to something small like `0.01`. Now you'll see a glowing white edge around your dissolve effect.
+Our changes don't show any glowing effect though. And that is because the parts that are glowing are also the parts that happen to be transparent. We need to slightly offset the glowing effect to bleed out of the dissolved edges. We can delete our connection between the Remap and Step nodes and create a new Add node in between. Take the result of the Remap node and input it into the Add node, then take the output from this Add node and hook it up to the Step node. Then set the other value of the Add node to something small like `0.01`. Now you'll see a glowing white edge around your dissolve effect.
 
 (Tip: You can collapse a node to make it smaller by hovering over it and clicking on the `^` arrow in the output preview)
 
@@ -163,7 +165,7 @@ We can also expose the value that goes into our Add node to make it able to edit
 
 ### Adding a color to the glow
 
-It would look better if we could make our edges glow. So let's add some color. First we'll delete the connection between our Step and Master nodes. Instead we'll create a new Color node and combine the results of this node with the output of the Step node in a new Multiply node. This Multiply node will then form the new connection to the Master node emission. We can change the Mode on the Color node to HDR to allow for really bright values and let's set the value to a light blue of `0, 82, 255` with an intensity of `4`.
+It would look better if we could make our edges glow in different colors. So let's add this functionality. First we'll delete the connection between our Step and Master nodes. Instead we'll create a new Color node and combine the results of this node with the output of the Step node in a new Multiply node. This Multiply node will then form the new connection to the Master node emission. We can change the Mode on the Color node to HDR to allow for really bright values and let's set the value to a light blue of `0, 82, 255` with an intensity of `4`.
 
 ![Changing the color of our dissolve](/Images/ColoredDissolve.PNG)
 
@@ -171,7 +173,7 @@ It would look better if we could make our edges glow. So let's add some color. F
 
 We're pretty much done with our dissolve shader. There's just a few more things to adjust.
 
-It would be nicer if we can see the back of the object while it is dissolving. We can do this by clicking the cog of the Master node and checking the Two Sided checkbox.
+It would look better if we can see the back of the object while it is dissolving. We can do this by clicking the cog of the Master node and checking the 'Two Sided' checkbox.
 
 We can also expose some values to the inspector to make editing the effect easier. Let's start by right clicking on the Color node and converting it to a property. We can rename it to 'Edge Color'.
 
@@ -181,11 +183,11 @@ Finally we'll save the shader by clicking 'Save Asset' at the top left of the sh
 
 ## Creating the hologram shader
 
-Once again we start off by creating a new PBR Graph under the `Shaders/` folder and naming it `HologramShader`. We will expose our albedo to the inspector by adding a new Color property on the blackboard called 'Base Color' and connecting that property up to the Albedo of the Master node. Let's also go ahead and set the default of the Base Color to `110, 205, 125`. Fianlly we'll change the preview to the monkey again.
+Once again we start off by creating a new PBR Graph under the `Shaders/` folder and naming it `HologramShader`. We will expose our albedo to the inspector by adding a new Color property on the blackboard called 'Base Color' and connecting that property up to the Albedo of the Master node. Let's also go ahead and set the default of the Base Color to `110, 205, 125`, a dull green. Finally we'll change the preview to the monkey again.
 
 ### Texture Transparency
 
-Holograms usually appear in these kinds of lines like some old CRT TV. We'll use a texture with these lines on it to make parts of our material transparent. We start off by adding a new property on the blackboard of type Texture2D. Rename the new property to `Hologram Texture` and set the default texture to `HologramLines_Simple` or `HologramLines_Cool`.
+Holograms usually appear projected with these kinds of horizontal lines like some old CRT TV. We'll use a texture with these lines on it to make parts of our material transparent. We start off by adding a new property on the blackboard of type Texture2D. Rename the new property to `Hologram Texture` and set the default texture to `HologramLines_Simple` or `HologramLines_Cool`.
 
 Once again we need to pipe our texture through a Sample Texture 2D node before adding it to the Alpha of our Master node. We also need to click the cog on our Master node and set the Surface to Transparent.
 
@@ -195,7 +197,7 @@ Once again we need to pipe our texture through a Sample Texture 2D node before a
 
 We have now ended up with mapping the texture onto the UV of the monkey. This creates a bunch of lines going in all different directions and is how you would usually apply textures. But in this case we want the lines to kind of scroll across from top to bottom.
 
-To do this we start off by creating a new 'Tiling And Offset' node. We connect the output of this node to the UV of our Sample Texture 2D node. Then we create a new 'Screen Position' node and connect the output to the UV input of the Tiling And Offset node. The preview should now lines going horizontally across the monkey instead of wrapping around the monkey.
+To do this we start off by creating a new 'Tiling And Offset' node. We connect the output of this node to the UV of our Sample Texture 2D node. Then we create a new 'Screen Position' node and connect the output to the UV input of the Tiling And Offset node. The preview should now show lines going horizontally across the monkey instead of wrapping around it.
 
 ![Adjusting the UV of the hologram](/Images/AdjustingHologramTexture.PNG)
 
@@ -205,7 +207,7 @@ It would be nice if we could adjust the tiling of our texture in the inspector. 
 
 ### Scrolling the texture
 
-Just as we can adjust the tiling of our texture through the Tiling And Offset, so can we adjust the offset of the texture. We can do this immediately by adding a Time node and connecting the Time output to the Offset of the Tiling And Offset node. Now you should be able to see the texture scrolling across the monkey in the preview.
+Just as we can adjust the tiling of our texture through the Tiling And Offset, so can we adjust the offset of the texture. We can do this by simply adding a Time node and connecting the Time output to the Offset of the Tiling And Offset node. Now you should be able to see the texture scrolling across the monkey in the preview.
 
 It would be nice to be able to control the scroll speed though. To do this we will put a Multiply node between Time and Tiling And Offset. We add a new Vector1 property to the blackboard called 'Scroll Speed' with a default value of `0.1`. We'll also hook this Scroll Speed up to the Multiply node.
 
@@ -227,11 +229,11 @@ Let's enchace our hologram by adding a bit of a glow. First we'll create a new C
 
 ![Creating a glow around the hologram](/Images/HologramGlow.PNG)
 
-The preview is a bit dull, but if we look at it in the editor it is a bit too bright. So let's start off by converting the Color node to a property and naming it 'Glow Color'. We'll then also lower the brightness a bit by lowering the intensity of our new property back down to `2`.
+The preview is a bit dull, but if we look at it in the editor it is way too bright. So let's start off by converting the Color node to a property and naming it 'Glow Color'. We'll then also lower the brightness a bit by lowering the intensity of our new property back down to `2`.
 
 ### Enhancing the glow
 
-We can enhance the glow a bit by taking the Sasmple Texture 2D output and also sending it to a One Minus node. This node inverts the input and sends it back out. We can combine the result of this One Minus with the Base Color property in a Multiply node. Then we combine this Multiply node with the colored Fresnel in a new Add node. Finally we output this Add node into the Emission of the Master node. This should make the lines on our hologram also glow to stand out a bit more.
+We can enhance the glow a bit by taking the Sample Texture 2D output and sending it to a One Minus node alongside the Master node. This node inverts the input and sends it back out. We can combine the result of this One Minus with the Base Color property in a Multiply node. Then we combine this Multiply node with the colored Fresnel in a new Add node. Finally we output this Add node into the Emission of the Master node. This should make the lines on our hologram also glow to stand out a bit more.
 
 ![Enhancing the glow](/Images/EnhancedHologramGlow.PNG)
 
