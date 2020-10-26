@@ -247,4 +247,10 @@ Lastly we can make our glow flicker. We start off with a Time node with the Time
 
 ## End note
 
-And with that we have finalized our three shaders. Shader graph is a powerful tool to quickly create complex shaders using simple operations. Due to it's visual nature it can also be understood and used by artists. Absolutely feel free to experiment with some of the nodes to create your own shaders and effects.
+And on that note, we have finalized our three shaders. Shader graph is a powerful tool to quickly create complex shaders using simple operations. Due to it's visual nature it can also be understood and used by artists. Absolutely feel free to experiment with some of the nodes to create your own shaders and effects.
+
+Here's also a few more sources for those interested:
+
+Developers can [build their own nodes](https://docs.unity3d.com/Packages/com.unity.shadergraph@5.7/manual/Custom-Nodes-With-CodeFunctionNode.html) for shader graph to perform custom calculations.
+
+Unity also offers [visual effect graph](https://unity.com/visual-effect-graph) for devs who want to create particle effects and animations. VFX graph is currently available out-of-the-box with the High Definition Render Pipeline, or in limited capability as a preview package with the Universal Render Pipeline.
