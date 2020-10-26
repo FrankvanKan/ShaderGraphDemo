@@ -4,7 +4,7 @@ Shader Graphs are a new method of creating your own shaders using a visual node 
 
 This readme will teach you the basics of shader graphs by creating three shaders of your own.
 1. [A glowing effect](#creating-our-first-shader)
-2. [A dissolving effect](#creating-the-dissolve-shader)
+2. [A dissolving effect](#creating-the-dissolving-shader)
 3. [A hologram effect](#creating-the-hologram-shader)
 
 ![The final three shaders](/Images/FinalResult.gif)
