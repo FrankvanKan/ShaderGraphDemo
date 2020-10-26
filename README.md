@@ -3,9 +3,11 @@
 Shader Graphs are a new method of creating your own shaders using a visual node based editor. No code required :)
 
 This readme will teach you the basics of shader graphs by creating three shaders of your own.
-1. A glowing effect
-2. A dissolving effect
-3. A hologram effect
+1. [A glowing effect](#creating-our-first-shader)
+2. [A dissolving effect](#creating-the-dissolve-shader)
+3. [A hologram effect](#creating-the-hologram-shader)
+
+![The final three shaders](/Images/FinalResult.gif)
 
 This GitHub repository contains a basic unity project with some models and materials that we can start working on.
 
