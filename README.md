@@ -3,9 +3,11 @@
 Shader Graphs are a new method of creating your own shaders using a visual node based editor. No code required :)
 
 This readme will teach you the basics of shader graphs by creating three shaders of your own.
-1. A glowing effect
-2. A dissolving effect
-3. A hologram effect
+1. [A glowing effect](#creating-our-first-shader)
+2. [A dissolving effect](#creating-the-dissolving-shader)
+3. [A hologram effect](#creating-the-hologram-shader)
+
+![The final three shaders](/Images/FinalResult.gif)
 
 This GitHub repository contains a basic unity project with some models and materials that we can start working on.
 
@@ -245,4 +247,10 @@ Lastly we can make our glow flicker. We start off with a Time node with the Time
 
 ## End note
 
-And with that we have finalized our three shaders. Shader graph is a powerful tool to quickly create complex shaders using simple operations. Due to it's visual nature it can also be understood and used by artists. Absolutely feel free to experiment with some of the nodes to create your own shaders and effects.
+And on that note, we have finalized our three shaders. Shader graph is a powerful tool to quickly create complex shaders using simple operations. Due to it's visual nature it can also be understood and used by artists. Absolutely feel free to experiment with some of the nodes to create your own shaders and effects.
+
+Here's also a few more sources for those interested:
+
+Developers can [build their own nodes](https://docs.unity3d.com/Packages/com.unity.shadergraph@5.7/manual/Custom-Nodes-With-CodeFunctionNode.html) for shader graph to perform custom calculations.
+
+Unity also offers [visual effect graph](https://unity.com/visual-effect-graph) for devs who want to create particle effects and animations. VFX graph is currently available out-of-the-box with the High Definition Render Pipeline, or in limited capability as a preview package with the Universal Render Pipeline.
