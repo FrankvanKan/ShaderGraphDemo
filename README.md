@@ -31,11 +31,11 @@ We have now opened the shader graph window. In the bottom right we have a previe
 
 You can scroll in and out by using the scroll wheel. You can drag the view by holding alt+leftmouse or the middle mouse and then dragging your cursor. The blackboard and preview are always shown like a HUD and can be dragged around by their title and/or resized by the bottom right corner of their windows.
 
-![Rezising the preview window](/Images/ResizingPreview.gif)
+![Resizing the preview window](/Images/ResizingPreview.gif)
 
 ## Creating the glowing shader
 
-We will start off by making a shader that will add a glowing edge around objects. Aditionally we'll make this edge pulse over time.
+We will start off by making a shader that will add a glowing edge around objects. Additionally we'll make this edge pulse over time.
 
 ### Setting a base color
 
@@ -51,7 +51,7 @@ Instead we will create a new node. You can create a new node by right clicking o
 
 ![Creating a new Fresnel Effect node](/Images/CreatingFresnelNode.gif)
 
-After creating our Fresnel node we connect its output to the emision of the Master node by clicking and holding the left mouse on the output and dragging it to the emmision input. This also immediately updates our preview to reflect the changes.
+After creating our Fresnel node we connect its output to the emission of the Master node by clicking and holding the left mouse on the output and dragging it to the emission input. This also immediately updates our preview to reflect the changes.
 
 ![Connecting the Fresnel node to the emission](/Images/ConnectingFresnelToEmission.gif)
 
@@ -69,7 +69,7 @@ To slightly bump up the glow we change the mode on the Color node to HDR and set
 
 Now that we have a nice glowing effect we can apply it to one of the monkeys in the scene. But first, we need to save our shader by clicking on 'Save Asset' in the top left of our shader graph window.
 
-Then we natigate to the `Materials/` folder in our project window. We select the `Monkey Left` material and at the top of the inspector we expand the Shader dropdown and select `ShaderGraphs > GlowShader`
+Then we navigate to the `Materials/` folder in our project window. We select the `Monkey Left` material and at the top of the inspector we expand the Shader dropdown and select `ShaderGraphs > GlowShader`
 
 ![Changing the shader on a material](/Images/ChangingMaterialShader.gif)
 
@@ -85,7 +85,7 @@ We can do this by going back into our shader, right clicking on our Color node a
 
 ![Converting the glow color to a property](/Images/ConvertingGlowColorToProperty.gif)
 
-The 'Color' property will now show up in our blackboard. From here we can set the checkox to Expose the property (checking this will make it show up in the inspector) and set some of the default values. We can also right click the property on the blackboard and rename it. We'll rename it to 'Glow Color'.
+The 'Color' property will now show up in our blackboard. From here we can check the checkbox to Expose the property (checking this will make it show up in the inspector) and set some of the default values. We can also right click the property on the blackboard and rename it. We'll rename it to 'Glow Color'.
 
 ![The converted glow color node as shown on the blackboard](/Images/ConvertedGlowColor.PNG)
 
@@ -223,11 +223,11 @@ Our shader should now look like this:
 
 We can go back into the editor and set the shader on our `Right Monkey` material to the HologramShader. Now you can play around with the color, texture and scrolling speed in the inspector.
 
-We'll continue to enchance the effect of the shader.
+We'll continue to enhance the effect of the shader.
 
 ### Hologram glow
 
-Let's enchace our hologram by adding a bit of a glow. First we'll create a new Color node with an HDR mode and an RGB of `255, 92, 0` and an intensity of `5`. We'll also add a Fresnel Effect node with a power of `3` and combine it with our color through a Multiply node. Then we'll take the output of that Multiply node and connect it to the Emission of our Master node.
+Let's enhance our hologram by adding a bit of a glow. First we'll create a new Color node with an HDR mode and an RGB of `255, 92, 0` and an intensity of `5`. We'll also add a Fresnel Effect node with a power of `3` and combine it with our color through a Multiply node. Then we'll take the output of that Multiply node and connect it to the Emission of our Master node.
 
 ![Creating a glow around the hologram](/Images/HologramGlow.PNG)
 
